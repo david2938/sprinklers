@@ -1,0 +1,8 @@
+.pio
+.vscode
+.DS_Store
+.python-version
+src/python/.idea/*
+src/secrets.h
+__pycache__
+temp

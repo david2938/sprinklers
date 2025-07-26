@@ -1,0 +1,429 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <!-- Required meta tags -->
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <!-- Bootstrap CSS -->
+        <!-- <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous"> -->
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous">
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.3/font/bootstrap-icons.css" rel="stylesheet" >
+        
+        <style>
+            /* button {
+                margin-bottom:  5px;
+            } */
+            .four_per_row {
+                width: calc((100% / 4) - 8px);
+                margin-right: 4px;
+                margin-bottom: 10px;
+            }
+            .two_per_row {
+                width: 46%;
+                margin-right: 10px;
+            }
+            .view_header {
+                background-color: white;
+                display: flex;
+                justify-content: space-between;
+            }
+            .view_header h3 {
+                text-align: center;
+                font-size: 20pt;
+                font-weight: bold;
+                width: 100%;
+            }
+            .view_header i {
+                font-size: 20pt;
+            }
+            #main_view button {
+                min-height: 80px;
+                /* margin-bottom: 10px; */
+            }
+            .time_input {
+                width: 50px;
+                margin-right: 4px;
+            }
+            .zone_input {
+                width: 75px;
+                margin-right: 5px;
+            }
+            .w-49 {
+                width: 49%;
+            }
+            #display_area {
+                margin-left: 10px;
+                margin-right: 10px;
+                background-color: white;
+                padding-top: 5px;
+            }
+            .display_panel {
+                background-color: #e6f3ff;
+                border: 2px solid black;
+                border-radius: 5px;
+                padding: 5px;
+                margin-bottom: 5px;
+                height: 62px;
+            }
+            #div_display_panel_2 {
+                white-space: nowrap;
+                overflow: clip;
+            }
+            .display_buttons {
+                display: flex;
+                justify-content: space-between;
+                margin-bottom: 10px;
+            }
+            .display_buttons button {
+                width: 32%;
+            }
+            #log_contents {
+                font-family: monospace;
+            }
+            #btn_log_bottom {
+                position: fixed;
+                bottom: 0;
+                right: 10px;
+            }
+            .invisible {
+                display: none;
+            }
+            #system_title {
+                text-transform: capitalize;
+            }
+                    </style>
+        <title id="head_title">Sprinklers</title>
+    </head>
+    <body>
+        <div id="display_area" class="sticky-top">
+            <div class="display_panel">
+                <div id="div_display_panel_time" class="float-end"></div>
+                <div id="div_display_panel_1" class="display_text"></div>
+                <div id="div_display_panel_state" class="float-end"></div>
+                <div id="div_display_panel_2" class="display_text"></div>
+            </div>
+            <div id="div_display_buttons" class="display_buttons" hidden>
+                <button id="btn_display_pause" type="button" class="btn btn-lg btn-secondary">
+                    <!-- pause -->
+                    <svg id="svg_pause" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pause-fill" viewBox="0 0 16 16">
+                        <path d="M5.5 3.5A1.5 1.5 0 0 1 7 5v6a1.5 1.5 0 0 1-3 0V5a1.5 1.5 0 0 1 1.5-1.5zm5 0A1.5 1.5 0 0 1 12 5v6a1.5 1.5 0 0 1-3 0V5a1.5 1.5 0 0 1 1.5-1.5z"></path>
+                    </svg>
+                    <!-- play -->
+                    <svg id="svg_play" class="invisible" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-play-fill" viewBox="0 0 16 16">
+                        <path d="m11.596 8.697-6.363 3.692c-.54.313-1.233-.066-1.233-.697V4.308c0-.63.692-1.01 1.233-.696l6.363 3.692a.802.802 0 0 1 0 1.393z"/>
+                    </svg>
+                </button>
+                <button id="btn_display_skip" type="button" class="btn btn-lg btn-secondary">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-fast-forward-fill" viewBox="0 0 16 16">
+                        <path d="M7.596 7.304a.802.802 0 0 1 0 1.392l-6.363 3.692C.713 12.69 0 12.345 0 11.692V4.308c0-.653.713-.998 1.233-.696l6.363 3.692Z"></path>
+                        <path d="M15.596 7.304a.802.802 0 0 1 0 1.392l-6.363 3.692C8.713 12.69 8 12.345 8 11.692V4.308c0-.653.713-.998 1.233-.696l6.363 3.692Z"></path>
+                    </svg>
+                </button>
+                <button id="btn_display_cancel" type="button" class="btn btn-lg btn-danger">Cancel</button>
+            </div>
+            <div class="view_header">
+                <span style="width: 38px;">
+                    <i class="bi bi-arrow-left-circle left-button" hidden></i>
+                </span>
+                <h3><span id="system_title"></span></h3>
+                <span style="width: 38px;">
+                    <i class="bi right-button" hidden></i>
+                </span>
+            </div>
+        </div>
+        <div class="container-fluid">
+            <div id="main_view" data-title="Sprinkler Controls" data-no-back-btn="true">
+                <div class="row row-cols-2 g-2">
+                    <div class="col">
+                        <button type="button" class="btn btn-primary btn-lg w-100">Zones</button>
+                    </div>
+                    <div class="col">
+                        <button type="button" class="btn btn-primary btn-lg w-100">Schedule</button>
+                    </div>
+                    <div class="col">
+                        <button type="button" class="btn btn-primary btn-lg w-100">Cycles</button>
+                    </div>
+                    <div class="col">
+                        <button type="button" class="btn btn-primary btn-lg w-100">Seasonal Adjustment</button>
+                    </div>
+                    <div class="col">
+                        <button type="button" class="btn btn-primary btn-lg w-100">System Hold</button>
+                    </div>
+                    <div class="col">
+                        <button type="button" class="btn btn-primary btn-lg w-100">Status</button>
+                    </div>
+                    <div class="col">
+                        <button type="button" class="btn btn-primary btn-lg w-100">System Settings</button>
+                    </div>
+                    <div class="col">
+                        <button type="button" class="btn btn-primary btn-lg w-100">Log</button>
+                    </div>
+                    </div>
+                </div>
+            </div>
+            <div id="zones_view" hidden data-title="Zones">
+                <div class="view_content">
+                    <div class="row row-cols-4 g-2 p-2">
+                        <div class="col">
+                            <button type="button" class="btn btn-primary btn-lg w-100" data-value="1">1</button>
+                        </div>
+                        <div class="col">
+                            <button type="button" class="btn btn-primary btn-lg w-100" data-value="2">2</button>
+                        </div>
+                        <div class="col">
+                            <button type="button" class="btn btn-primary btn-lg w-100" data-value="3">3</button>
+                        </div>
+                        <div class="col">
+                            <button type="button" class="btn btn-primary btn-lg w-100" data-value="4">4</button>
+                        </div>
+                        <div class="col">
+                            <button type="button" class="btn btn-primary btn-lg w-100" data-value="5">5</button>
+                        </div>
+                        <div class="col">
+                            <button type="button" class="btn btn-primary btn-lg w-100" data-value="6">6</button>
+                        </div>
+                        <div class="col">
+                            <button type="button" class="btn btn-primary btn-lg w-100" data-value="7">7</button>
+                        </div>
+                        <div class="col">
+                            <button type="button" class="btn btn-warning btn-lg w-100" data-value="off">Off</button>
+                        </div>
+                    </div>
+                    <div class="status_area px-2 mt-4"></div>
+                </div>
+            </div>
+            <div id="schedule_view" hidden data-title="Schedule">
+                <div class="view_content ps-2">
+                    <h4>Zones</h4>
+                    <button type="button" class="btn btn-primary btn-lg four_per_row zn_btn">1</button>
+                    <button type="button" class="btn btn-primary btn-lg four_per_row zn_btn">2</button>
+                    <button type="button" class="btn btn-primary btn-lg four_per_row zn_btn">3</button>
+                    <button type="button" class="btn btn-primary btn-lg four_per_row zn_btn">4</button>
+                    <button type="button" class="btn btn-primary btn-lg four_per_row zn_btn">5</button>
+                    <button type="button" class="btn btn-primary btn-lg four_per_row zn_btn">6</button>
+                    <button type="button" class="btn btn-primary btn-lg four_per_row zn_btn">7</button>
+                    <button type="button" class="btn btn-warning btn-lg four_per_row clr_btn">C</button>
+                    <h4>Minutes</h4>
+                    <button type="button" class="btn btn-primary btn-lg four_per_row min_btn" data-minutes="1">1</button>
+                    <button type="button" class="btn btn-primary btn-lg four_per_row min_btn" data-minutes="2">2</button>
+                    <button type="button" class="btn btn-primary btn-lg four_per_row min_btn" data-minutes="5">5</button>
+                    <button type="button" class="btn btn-primary btn-lg four_per_row min_btn" data-minutes="10">10</button>
+                    <button type="button" class="btn btn-primary btn-lg four_per_row min_btn" data-minutes="15">15</button>
+                    <button type="button" class="btn btn-primary btn-lg four_per_row min_btn" data-minutes="20">20</button>
+                    <button type="button" class="btn btn-primary btn-lg four_per_row min_btn" data-minutes="30">30</button>
+                    <button type="button" class="btn btn-primary btn-lg four_per_row min_btn" data-minutes="60">1 hr</button>
+                    <h4>Status</h4>
+                    <button type="button" class="btn btn-primary btn-lg ctrl_btn">Status</button>
+                    <div class="status_area"></div>
+                </div>
+            </div>
+            <div id="cycles_view" hidden data-title="Cycles" 
+                    data-right-btn-class="bi-plus-circle"
+                    data-right-btn-onclick="addNewCycle()">
+                <div class="view_content px-2"></div>
+            </div>
+            <div id="cycle_edit_view" hidden
+                    data-right-btn-class="bi-cloud-arrow-up"
+                    data-right-btn-onclick="cycleEditViewFormSubmit()">
+                <div class="view_content px-2">
+                    <form>
+                        <div class="mb-2">
+                            <label for="nameField">Cycle Name</label>
+                            <br>
+                            <input type="text" id="nameField" name="name">
+                        </div>
+                        <!-- <div class="mb-2">
+                            <label for="typeField">Cycle Type</label>
+                            <br>
+                            <input type="text" id="typeField" name="type">
+                        </div>
+                        <div class="mb-2">
+                            <label for="daysField">Days</label>
+                            <br>
+                            <input type="text" id="daysField" name="days">
+                        </div> -->
+
+                        <!-- IMPORTANT: the id and name attributes matter!         -->
+                        <!-- The btn-groups won't function properly without them.  -->
+                        <!-- Leave them there even so none of the code uses them.  -->
+                        <!-- (Bootstrap code uses them.)                           -->
+
+                        <div id="divCycleTypes" class="btn-group" role="group">
+                            <input type="radio" class="btn-check" name="cycleType" data-value='specificDays' id="btnCycleTypeSpecific" autocomplete="off">
+                            <label class="btn btn-outline-success" for="btnCycleTypeSpecific">Specifc Days</label>
+                            <input type="radio" class="btn-check" name="cycleType" data-value='every2nd' id="btnCycleType2nd" autocomplete="off">
+                            <label class="btn btn-outline-success" for="btnCycleType2nd">Every 2nd</label>
+                            <input type="radio" class="btn-check" name="cycleType" data-value='every3rd' id="btnCycleType3rd" autocomplete="off">
+                            <label class="btn btn-outline-success" for="btnCycleType3rd">Every 3rd</label>
+                            <input type="radio" class="btn-check" name="cycleType" data-value='off' id="btnCycleTypeOff" autocomplete="off">
+                            <label class="btn btn-outline-danger" for="btnCycleTypeOff">Off</label>
+                        </div>
+                        <div id="divDaysOfWeek" class="btn-group" role="group" style="margin-top: 5px; width: 100%;">
+                            <input type="checkbox" class="btn-check" name="dayOfWeek" data-value=2 id="inputDow2" autocomplete="off">
+                            <label class="btn btn-outline-primary" for="inputDow2">Mo</label>
+                            <input type="checkbox" class="btn-check" name="dayOfWeek" data-value=3 id="inputDow3" autocomplete="off">
+                            <label class="btn btn-outline-primary" for="inputDow3">Tu</label>
+                            <input type="checkbox" class="btn-check" name="dayOfWeek" data-value=4 id="inputDow4" autocomplete="off">
+                            <label class="btn btn-outline-primary" for="inputDow4">We</label>
+                            <input type="checkbox" class="btn-check" name="dayOfWeek" data-value=5 id="inputDow5" autocomplete="off">
+                            <label class="btn btn-outline-primary" for="inputDow5">Th</label>
+                            <input type="checkbox" class="btn-check" name="dayOfWeek" data-value=6 id="inputDow6" autocomplete="off">
+                            <label class="btn btn-outline-primary" for="inputDow6">Fr</label>
+                        </div>
+                        <div id="divDaysOfWeek2"class="btn-group" role="group" style="margin-top: 5px;">
+                            <input type="checkbox" class="btn-check" name="dayOfWeek" data-value=1 id="inputDow1" autocomplete="off">
+                            <label class="btn btn-outline-primary" for="inputDow1">Su</label>                          
+                            <input type="checkbox" class="btn-check" name="dayOfWeek" data-value=7 id="inputDow7" autocomplete="off">
+                            <label class="btn btn-outline-primary" for="inputDow7">Sa</label>                          
+                        </div>
+                        <div class="mb-2">
+                            <label for="hourField">Start Time</label>
+                            <br>
+                            <input type="text" pattern="\d*" id="hourField" name="hour" class="time_input">
+                            :&nbsp;
+                            <input type="text" pattern="\d*" id="minField" name="min" class="time_input">
+                        </div>
+
+                        <!-- these two fields aren't used right now-->
+
+                        <!-- <div class="mb-2">
+                            <label for="firstField">Days</label>
+                            <br>
+                            <input type="text" id="firstField" name="first">
+                        </div>
+                        <div class="mb-2">
+                            <label for="countField">Days</label>
+                            <br>
+                            <input type="text" id="countField" name="count">
+                        </div> -->
+                        <label>Schedule</label>
+                        <div id="cycle_edit_schedule">
+                        </div>
+                        <div id="cycle_edit_form_submit">
+                            <button type="submit" class="btn btn-primary">Submit</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <div id="status_view" hidden data-title="Status"
+                    data-right-btn-class="bi-arrow-clockwise"
+                    data-right-btn-onclick="refreshStatusArea('status_view')">
+                <div class="view_content px-2">
+                    <div class="status_area"></div>
+                </div>
+            </div>
+            <div id="seasonal_adjustment_view" hidden data-title="Seasonal Adjustment">
+                <div class="view_content px-2">
+                    <p>
+                        Seasonal adjustment can range<br>from 1 to 255:<br>
+                        <ul>
+                            <li>100 is normal</li>
+                            <li>50 is 1/2 stated runtimes</li>
+                            <li>200 is 2x stated runtimes</li>
+                        </ul>
+                    </p>
+                    <div class="mb-2">
+                        <label for="seasonalAdjustment">Seasonal Adjustment</label>
+                        <br>
+                        <input type="text" name="seasonalAdjustment" id="seasonalAdjustmentField" pattern="\d*">
+                    </div>
+                    <button id="btn_seasonalAdjustment_submit" type="submit" class="btn btn-primary">Submit</button>
+                </div>
+            </div>
+            <div id="system_hold_view" data-title="System Hold" hidden>
+                <div class="view_content px-2">
+                    <div id="system_hold_start" class="row row-cols-2 px-2 g-2" hidden></div>
+                    <div id="system_hold_custom" class="px-2" hidden>
+                        <div class="row mb-2">
+                            <label for="holdDaysField">Hold Days</label>
+                            <br>
+                            <input type="text" id="holdDaysField" name="holdDays" pattern="\d*">
+                        </div>
+                        <div class="row">
+                            <button type="button" class="btn btn-primary btn-lg"
+                                data-value="custom submit" onclick="systemHoldButtonClick(this)">
+                                Submit
+                            </button>
+                        </div>
+                    </div>
+                    <div id="system_hold_cancel" class="row px-2 g-2" hidden>                    
+                        <p>Automatic system operation is currently suspended.</p>
+                        <p>The system will resume operation on <br><span></span></p>
+                        <button type="button" class="btn btn-success btn-lg w-100"
+                            data-value="cancel hold" onclick="systemHoldButtonClick(this)">
+                                Cancel System Hold
+                        </button>
+                    </div>
+                    <div id="system_turn_on" hidden>
+                        <p>The system is currently turned off.</p>
+                        <button type="button" class="btn btn-success btn-lg w-100"
+                            data-value="turn on" onclick="systemHoldButtonClick(this)">
+                                Turn System On
+                        </button>
+                    </div>
+                    <div id="system_hold_result" hidden></div>
+                </div>
+            </div>
+            <div id="system_settings_view" data-title="System Settings" hidden>
+                <div class="view_content px-2">
+                    <div class="mb-2">
+                        <label for="logicMode">Logic Mode</label>
+                        <br>
+                        <input type="text" name="logicMode" id="logicModeField">
+                    </div>
+                    <div class="mb-2">
+                        <label for="outputEnable">Output Enable</label>
+                        <br>
+                        <input type="text" name="outputEnable" id="outputEnableField">
+                    </div>
+                    <div class="my-2">
+                        <button id="btn_system_settings_restart" 
+                            type="button" 
+                            class="btn btn-primary"
+                            onclick="restartController()">Restart Controller</button>
+                    </div>
+                </div>
+            </div>
+            <div id="log_view" data-title="Log" hidden>
+                <div class="view_content px-3">
+                    <div id="log_contents">Retrieveing log...</div>
+                    <button id="btn_log_bottom" class="btn btn-primary">Bottom</button>
+                    <div id="log_contents_bottom">--- End of Log ---</div>
+                </div>
+            </div>
+        </div>
+        <div id="cycle_modal" class="modal fade" tabindex="-1">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h4 class="modal-title" id="cycle_modal_title"></h4>
+                        <button class="btn-close" type="button" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <h5>Actions:</h5>
+                        <button class="btn btn-success btn-lg w-49 mb-2" type="button">Run</button>
+                        <button class="btn btn-primary btn-lg w-49 mb-2" type="button">Edit</button>
+                        <button class="btn btn-primary btn-lg w-49 mb-2" type="button">Copy</button>
+                        <button class="btn btn-danger btn-lg w-49 mb-2" type="button">Delete</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div id="simple_modal" class="modal fade" tabindex="-1">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h4 id="h4_simple_modal_title" class="modal-title"></h4>
+                        <button class="btn-close" type="button" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div id="div_simple_modal_body" class="modal-body">
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Bootstrap 5 now wants the script all the way at the very end of the body -->
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+        <script src="/sprinklers.js"></script>
+        </body>
+</html>

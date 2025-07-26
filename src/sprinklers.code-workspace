@@ -1,0 +1,33 @@
+{
+	"folders": [
+		{
+			"name": "sprinklers",
+			"path": ".."
+		},
+		{
+			"path": "../../playground"
+		}
+	],
+	"settings": {
+		"files.associations": {
+			"functional": "cpp",
+			"istream": "cpp",
+			"ostream": "cpp",
+			"algorithm": "cpp",
+			"fstream": "cpp",
+			"sstream": "cpp",
+			"streambuf": "cpp",
+			"deque": "cpp",
+			"list": "cpp",
+			"string": "cpp",
+			"vector": "cpp",
+			"initializer_list": "cpp",
+			"*.tcc": "cpp",
+			"array": "cpp",
+			"map": "cpp",
+			"unordered_map": "cpp",
+			"typeinfo": "cpp",
+			"exception": "cpp"
+		}
+	}
+}
