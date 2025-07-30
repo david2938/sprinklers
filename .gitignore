@@ -6,3 +6,4 @@ src/python/.idea/*
 src/secrets.h
 __pycache__
 temp
+*~
