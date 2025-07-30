@@ -43,8 +43,12 @@
 #	- add in commands to upload an existing firmware file to a host
 
 changed:
+	diff -qr -x '.*' -x '_*' -x temp . ../sprinklers | awk '$$0 ~ /^Files/ {print $$2} $$0 ~ /^Only/ {print}'
+
+changed-raw:
 	diff -qr -x '.*' -x '_*' -x '*~' -x temp . ../sprinklers
 
+# upload-html: host = $(host)
 upload-html:
 ifndef host
 	@echo host not set
