@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
- #include <interval_func.h>
+#include <interval_func.h>
 
 void IntervalFunc::loop() {
     if ((now - prevMillis) >= interval) {
