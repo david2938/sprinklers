@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
- #include <ESP8266WiFi.h>
+#include <ESP8266WiFi.h>
 
 class SimpleWiFi {
     const char* ssid;
