@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
- #include <simple_wifi.h>
+#include <simple_wifi.h>
 
 SimpleWiFi::SimpleWiFi(const char* ssid, const char* passphrase) : 
     ssid(ssid), passphrase(passphrase) {}
