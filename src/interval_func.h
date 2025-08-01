@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
- struct IntervalFunc {
+struct IntervalFunc {
     unsigned long interval;
     unsigned long prevMillis;
     unsigned long& now;
