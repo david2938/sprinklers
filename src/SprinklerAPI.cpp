@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
- #include <Arduino.h>
+#include <Arduino.h>
 #include <ESP8266WiFi.h>
 #include <uri/UriBraces.h>
 #include <SprinklerAPI.hpp>
